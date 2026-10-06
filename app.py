@@ -130,6 +130,18 @@ def progress():
     )
 
 
+@app.route("/api/test-notification", methods=["POST"])
+def test_notification():
+    data = request.get_json()
+    if not data or "type" not in data:
+        return jsonify({"error": "Tipo de notificación no especificado"}), 400
+
+    success = data["type"] == "success"
+    transcoder._notify("archivo_de_prueba.mov", success=success,
+                       error="Este es un error de prueba" if not success else None)
+    return jsonify({"message": "Notificación de prueba enviada"})
+
+
 @app.route("/api/status")
 def status():
     return jsonify({"busy": transcoder.is_busy})

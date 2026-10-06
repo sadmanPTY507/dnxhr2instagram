@@ -239,5 +239,39 @@ document.addEventListener("DOMContentLoaded", () => {
         convertBtn.disabled = !selectedFile;
     }
 
+    // Test notification buttons
+    document.getElementById("testSuccessBtn").addEventListener("click", () => testNotification("success"));
+    document.getElementById("testFailBtn").addEventListener("click", () => testNotification("failure"));
+
+    function testNotification(type) {
+        const btn = type === "success"
+            ? document.getElementById("testSuccessBtn")
+            : document.getElementById("testFailBtn");
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Enviando...";
+
+        fetch("/api/test-notification", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type }),
+        })
+            .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (ok) {
+                    showStatus(data.message, "success");
+                } else {
+                    showStatus(data.error || "Error al enviar notificación", "error");
+                }
+            })
+            .catch(() => {
+                showStatus("Error de conexión al enviar notificación", "error");
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            });
+    }
+
     loadFiles();
 });

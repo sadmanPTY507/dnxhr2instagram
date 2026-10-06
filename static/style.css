@@ -245,3 +245,36 @@ header p {
     border-color: var(--accent);
     background: var(--accent);
 }
+
+.test-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-test {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.btn-test-success {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.btn-test-success:hover:not(:disabled) {
+    background: rgba(34, 197, 94, 0.25);
+}
+
+.btn-test-fail {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-test-fail:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.25);
+}
