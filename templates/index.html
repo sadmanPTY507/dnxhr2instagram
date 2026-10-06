@@ -34,10 +34,20 @@
         </div>
 
         <div class="card">
-            <h2>Archivos disponibles</h2>
-            <ul id="fileList" class="file-list">
-                <li class="empty-state">Cargando...</li>
-            </ul>
+            <div class="tabs">
+                <button class="tab active" data-tab="input">Input</button>
+                <button class="tab" data-tab="output">Output</button>
+            </div>
+            <div id="inputPanel" class="tab-panel active">
+                <ul id="fileList" class="file-list">
+                    <li class="empty-state">Cargando...</li>
+                </ul>
+            </div>
+            <div id="outputPanel" class="tab-panel">
+                <ul id="outputList" class="file-list">
+                    <li class="empty-state">Cargando...</li>
+                </ul>
+            </div>
         </div>
 
         <div class="card">

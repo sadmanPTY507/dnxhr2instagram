@@ -3,7 +3,7 @@ import os
 import threading
 import time
 
-from flask import Flask, Response, jsonify, render_template, request
+from flask import Flask, Response, jsonify, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
 
 from transcoder import Transcoder
@@ -128,6 +128,31 @@ def progress():
         mimetype="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.route("/api/outputs")
+def list_outputs():
+    files = []
+    if os.path.exists(OUTPUT_DIR):
+        for name in sorted(os.listdir(OUTPUT_DIR)):
+            filepath = os.path.join(OUTPUT_DIR, name)
+            if os.path.isfile(filepath):
+                size = os.path.getsize(filepath)
+                files.append({
+                    "name": name,
+                    "size": size,
+                    "size_human": _format_size(size),
+                })
+    return jsonify(files)
+
+
+@app.route("/api/download/<path:filename>")
+def download_file(filename):
+    try:
+        _safe_path(OUTPUT_DIR, filename)
+    except ValueError:
+        return jsonify({"error": "Ruta no válida"}), 400
+    return send_from_directory(OUTPUT_DIR, filename, as_attachment=True)
 
 
 @app.route("/api/test-notification", methods=["POST"])

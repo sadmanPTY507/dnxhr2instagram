@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const convEta = document.getElementById("convEta");
     const statusMsg = document.getElementById("statusMsg");
 
+    const outputList = document.getElementById("outputList");
+
     let selectedFile = null;
     let eventSource = null;
 
@@ -56,8 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
         convertBtn.disabled = !selectedFile;
     }
 
-    function showStatus(message, type) {
-        statusMsg.textContent = message;
+    function showStatus(message, type, html) {
+        if (html) {
+            statusMsg.innerHTML = message;
+        } else {
+            statusMsg.textContent = message;
+        }
         statusMsg.className = "status-message visible " + type;
     }
 
@@ -207,7 +213,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 convBar.classList.add("success");
                 convPercent.textContent = "100%";
                 convEta.textContent = "Completado";
-                showStatus("Conversión exitosa: " + filename, "success");
+                const outputName = filename.replace(/\.[^.]+$/, "") + ".mp4";
+                const downloadUrl = "/api/download/" + encodeURIComponent(outputName);
+                showStatus(
+                    'Conversión exitosa: ' + escapeHtml(filename) + ' — <a href="' + downloadUrl + '">Hacé click aquí para descargar</a>',
+                    "success",
+                    true,
+                );
+                loadOutputs();
                 finish();
             } else if (data.status === "error") {
                 convBar.classList.add("error");
@@ -237,6 +250,35 @@ document.addEventListener("DOMContentLoaded", () => {
     function resetConvertBtn() {
         convertBtn.textContent = "CONVERTIR";
         convertBtn.disabled = !selectedFile;
+    }
+
+    // Tabs
+    document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+            tab.classList.add("active");
+            document.getElementById(tab.dataset.tab + "Panel").classList.add("active");
+            if (tab.dataset.tab === "output") loadOutputs();
+        });
+    });
+
+    function loadOutputs() {
+        fetch("/api/outputs")
+            .then((r) => r.json())
+            .then((files) => {
+                outputList.innerHTML = "";
+                if (files.length === 0) {
+                    outputList.innerHTML = '<li class="empty-state">No hay archivos convertidos</li>';
+                    return;
+                }
+                files.forEach((f) => {
+                    const li = document.createElement("li");
+                    li.className = "output-item";
+                    li.innerHTML = `<span class="file-name">${escapeHtml(f.name)}</span><span class="file-size">${f.size_human}</span><a class="btn-download" href="/api/download/${encodeURIComponent(f.name)}">Descargar</a>`;
+                    outputList.appendChild(li);
+                });
+            });
     }
 
     // Test notification buttons
@@ -274,4 +316,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadFiles();
+    loadOutputs();
 });
