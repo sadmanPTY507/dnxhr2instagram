@@ -1,0 +1,6 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+CLAUDE.md
+.claude
