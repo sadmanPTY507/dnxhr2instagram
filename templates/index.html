@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNxHR → Instagram</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DNxHR → Instagram</h1>
+            <p>Transcodificador de Avid DNxHR a H.264 para Instagram y WhatsApp</p>
+        </header>
+
+        <div id="statusMsg" class="status-message"></div>
+
+        <div class="card">
+            <h2>Subir archivo</h2>
+            <div id="dropzone" class="dropzone">
+                <div class="dropzone-icon">📁</div>
+                <p>Arrastrá un archivo aquí o <span class="browse">seleccioná uno</span></p>
+            </div>
+            <input type="file" id="fileInput" hidden>
+            <div id="uploadProgress" class="upload-progress">
+                <div class="progress-bar-track">
+                    <div id="uploadBar" class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="uploadPercent">0%</span>
+                    <span>Subiendo...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Archivos disponibles</h2>
+            <ul id="fileList" class="file-list">
+                <li class="empty-state">Cargando...</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="options">
+                <input type="checkbox" id="deleteSource">
+                <label for="deleteSource">Borrar archivo de input al finalizar con éxito</label>
+            </div>
+        </div>
+
+        <button id="convertBtn" class="btn btn-primary" disabled>CONVERTIR</button>
+
+        <div class="card" style="margin-top: 16px;">
+            <h2>Probar notificaciones</h2>
+            <div class="test-buttons">
+                <button id="testSuccessBtn" class="btn btn-test btn-test-success">Probar notificación con éxito</button>
+                <button id="testFailBtn" class="btn btn-test btn-test-fail">Probar notificación con fallo</button>
+            </div>
+        </div>
+
+        <div id="convProgress" class="progress-section card" style="margin-top: 16px;">
+            <h2>Progreso de conversión</h2>
+            <div class="progress-bar-track">
+                <div id="convBar" class="progress-bar-fill"></div>
+            </div>
+            <div class="progress-info">
+                <span id="convPercent">0%</span>
+                <span id="convEta">Calculando...</span>
+            </div>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

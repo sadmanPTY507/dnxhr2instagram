@@ -1,0 +1,23 @@
+services:
+  transcoder:
+    build: .
+    container_name: dnxhr2instagram
+    ports:
+      - "5000:5000"
+    volumes:
+      - /apps/TRANSCODING/inputs:/inputs
+      - /apps/TRANSCODING/outputs:/outputs
+    environment:
+      - CPU_CORES=3
+      - NTFY_TOPIC=pi-transcoding
+      - NTFY_URL=https://ntfy.sh
+      - FFMPEG_CRF=18
+      - FFMPEG_PRESET=slow
+      - INPUT_DIR=/inputs
+      - OUTPUT_DIR=/outputs
+      - MAX_UPLOAD_SIZE_GB=10
+    deploy:
+      resources:
+        limits:
+          cpus: "3.0"
+    restart: unless-stopped
